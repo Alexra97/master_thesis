@@ -2,16 +2,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#import seaborn as sns
 from sklearn.cluster import DBSCAN
-#from sklearn.metrics import silhouette_score
-#from sklearn.metrics import v_measure_score
 from sklearn.neighbors import NearestNeighbors
 from kneed import KneeLocator
-
-####### POR SI NO DETECTA UN MODULO
-# %pip install kneed
-#######
 
 ### Función que elimina las moléculas que no se encuentran dentro de los límites estándar ###
 def molPropCorrect(df):
