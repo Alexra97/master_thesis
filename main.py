@@ -1,9 +1,10 @@
 # Cargar las librerías
-from qsar_analysis import chembl_screening as cs
+import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
+from qsar_analysis import chembl_screening as cs
+from qsar_analysis import qsar_modelling as qm
 
 # Carga y cribado de los datos       
 ## Cargar los dataframes
@@ -59,6 +60,25 @@ data_max = cs.labelData(data_max)
 data_mean = cs.labelData(data_mean)
 
 ## Eliminar las columnas sobrantes
-data_max = cs.dropCols(data_max)
-data_mean = cs.dropCols(data_mean)
+cs.dropCols(data_max)
+cs.dropCols(data_mean)
+
+
+# Generación de los modelos QSAR
+
+## Obtener los fingerprints de los códigos SMILE
+### Max
+mols_max = qm.getMols(data_max[["Molecule ChEMBL ID", "standardized_molecule"]])
+fingerprints_max = qm.getMorganFP(mols_max)
+data_max = pd.merge(fingerprints_max, data_max, on='Molecule ChEMBL ID').drop(["standardized_molecule"], axis=1)
+
+### Mean
+mols_mean = qm.getMols(data_mean[["Molecule ChEMBL ID", "standardized_molecule"]])
+fingerprints_mean = qm.getMorganFP(mols_mean)
+data_mean = pd.merge(fingerprints_mean, data_mean, on='Molecule ChEMBL ID').drop(["standardized_molecule"], axis=1)
+
+## Dividir el conjunto de datos en train y test
+data_train_max, data_test_max = qm.subsetData(data_max, 0.8, 97)
+data_train_mean, data_test_mean = qm.subsetData(data_mean, 0.8, 97)
+print(len(data_test_max))
 
