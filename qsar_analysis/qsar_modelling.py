@@ -1,9 +1,12 @@
 # Cargar las librerías
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from rdkit.Chem import rdFingerprintGenerator
 from rdkit import Chem
+from tensorflow import keras
+from keras.layers import Dense
+from sklearn import metrics
+from sklearn.model_selection import GridSearchCV
 
 ### Función que obtiene el listado de moléculas a partir de sus smiles (conservando su ID) ###
 def getMols(smiles_df):
@@ -24,8 +27,76 @@ def getMorganFP(mols_df):
     df_morgan_FPs.set_axis(names, axis=1, inplace=True)
     return df_morgan_FPs
 
-### Función que crea dos subconjuntos con un determinado tamaño para un dataframe ###   
-def subsetData(df, pcent, seed):
-    train = df.sample(frac=pcent, random_state=seed)
-    test = df.drop(train.index)
-    return train, test
+### Función que genera una red neuronal artificial con los parámetros establecidos ###
+def buildANN(n1, n2):
+    model = keras.Sequential([
+        Dense(n1, activation='relu', input_shape=(2048,)),
+        Dense(n2, activation='relu'),
+        Dense(1, activation="sigmoid")
+    ])
+    model.compile(optimizer="SGD", loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
+### Función que devuelve las métricas obtenidas a partir de la predicción de un modelo ###
+def getQualityMetrics(y, pred):
+    # Obtener la sensibilidad y la especificidad
+    tn, fp, fn, tp = metrics.confusion_matrix(y, pred).ravel()
+    sens = tp / (tp+fn)
+    spec = tn / (tn+fp)
+    
+    # Obtener el valor del área bajo la curva ROC
+    fpr, tpr, _ = metrics.roc_curve(y, pred, pos_label=1)
+    auc = metrics.auc(fpr, tpr)
+    
+    # Obtener las demás métricas
+    fm = metrics.f1_score(y, pred)
+    ba = metrics.balanced_accuracy_score(y, pred)
+    
+    # Devolver una fila con los datos
+    return pd.Series([ba, sens, spec, tp, fp, fm, auc])
+
+def tp_score(y, pred):
+    _, _, _, tp = metrics.confusion_matrix(y, pred).ravel()
+    return tp
+
+def fp_score(y, pred):
+    _, fp, _, _ = metrics.confusion_matrix(y, pred).ravel()
+    return fp
+
+def trainTest(model, params, kfold, trainX, trainY, testX, testY):
+    # Establecer un scoring con métricas personalizadas
+    scoring = {
+        'balanced_accuracy': metrics.make_scorer(metrics.balanced_accuracy_score),
+        'sensitivity': metrics.make_scorer(metrics.recall_score),
+        'specificity': metrics.make_scorer(metrics.recall_score,pos_label=0),
+        'true_positives' : metrics.make_scorer(tp_score),
+        'false_positives' : metrics.make_scorer(fp_score),
+        'F-measure' : metrics.make_scorer(metrics.f1_score),
+        'AUC' : metrics.make_scorer(metrics.roc_auc_score)
+    }
+    
+    # Realizar la búsqueda de los mejores hiperparámetros del modelo
+    grid = GridSearchCV(estimator=model, param_grid=params, cv=kfold, scoring=scoring, refit="balanced_accuracy")
+    grid.fit(trainX, trainY)
+    
+    # Realizar la predicción con el mejor modelo
+    best_model = grid.best_estimator_
+    pred = best_model.predict(testX)
+    
+    # Obtener las métricas de calidad para esta predicción
+    qm = getQualityMetrics(testY, pred)
+    
+    # Obtener las métricas de calidad para el entrenamiento
+    ind = grid.best_index_
+    scores = pd.Series([grid.cv_results_['mean_test_balanced_accuracy'][ind], grid.cv_results_['mean_test_sensitivity'][ind],
+                        grid.cv_results_['mean_test_specificity'][ind], grid.cv_results_['mean_test_true_positives'][ind],
+                        grid.cv_results_['mean_test_false_positives'][ind], grid.cv_results_['mean_test_F-measure'][ind], 
+                        grid.cv_results_['mean_test_AUC'][ind]])
+    
+    # Crear un dataframe auxiliar con las métricas como columnas
+    df_metrs = pd.DataFrame()
+    df_metrs = df_metrs.append(scores, ignore_index=True)
+    df_metrs = df_metrs.append(qm, ignore_index=True)
+    
+    # Devolver la combinación de parámetros ganadora y sus métricas para la fase de entrenamiento y de test
+    return grid.best_params_, df_metrs
