@@ -6,10 +6,11 @@ Alejandro R. López
 Scripts are organized according to the following structure:  
  
 * **PROJECT**
-	* **qsar_analysis [package]**  
+	* **qsar_pckg [package]**  
 		 * chembl_screening.py: Data screening functions.  
 		 * qsar_modelling.py: Model management and data transformation functions.  
   	* **main.py**: Main script with the analysis pipeline.  
+  	* **qsar_testing.py**: Testing of the QSAR models.  
 
 ## Results
 Result files of the study can be found in the "Resultados" folder. This way anyone can see and use the data obtained in this thesis.
