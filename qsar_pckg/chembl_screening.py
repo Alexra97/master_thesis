@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 from kneed import KneeLocator
+import pubchempy as pcp
 
 ### Función que elimina las moléculas que no se encuentran dentro de los límites estándar ###
 def molPropCorrect(df):
@@ -74,7 +75,7 @@ def elbowPlot(df, n):
     nearest_neighbors = NearestNeighbors(n_neighbors=n)
     neighbors = nearest_neighbors.fit(df)
     
-    distances, indices = neighbors.kneighbors(df)
+    distances, _ = neighbors.kneighbors(df)
     distances = np.sort(distances[:,14], axis=0)
     
     # Obtener el Elbow point
@@ -121,8 +122,12 @@ def labelData(df):
 def dropCols(df):
     return df.drop(["standardized_molecule_InchiKey", "properties_log", 
                     "Molecular Weight","pChEMBL Value"], axis=1, inplace=True)
-        
-        
+    
+### Función que obtiene los códigos Smile y los devuelve junto al ID ###    
+def getSmiles(df, id_col):
+    IDs = [r.split(",")[0] for r in df.iloc[1:, id_col]]
+    smiles = [pcp.Compound.from_cid(i).isomeric_smiles for i in IDs]
+    return pd.DataFrame({'PubChem ID' : IDs, 'SMILES' : smiles})
         
         
         
