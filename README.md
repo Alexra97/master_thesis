@@ -12,5 +12,8 @@ Scripts are organized according to the following structure:
   	* **main.py**: Main script with the analysis pipeline.  
   	* **qsar_testing.py**: Testing of the QSAR models.  
 
+## Data
+Data files can be found in the "Data" folder. Anyone can use this data to replicate the results or to begin a new study from this point.
+
 ## Results
-Result files of the study can be found in the "Resultados" folder. This way anyone can see and use the data obtained in this thesis.
+Result files of the study can be found in the "Results" folder. This way anyone can see and use the data obtained in this thesis, including QSAR models.
