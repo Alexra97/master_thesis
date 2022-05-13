@@ -25,7 +25,7 @@ def splitData(df, filename):
     train_X, test_X, train_Y, test_Y = train_test_split(X, Y, test_size=0.2, stratify=Y)
     
     # Almacenar los SMILES de entrenamiento
-    train_X.join(train_Y.to_frame()).to_csv(filename+'.csv', index=False)
+    train_X.to_csv(filename+'.csv', index=False)
     
     return train_X, test_X, train_Y, test_Y, X, Y
 
@@ -57,11 +57,11 @@ def getTrainTestFP(train_X, test_X, X):
     # Obtener los fingerprints de estas moléculas
     fingerprints_train = getMorganFP(mols_train)
     fingerprints_test = getMorganFP(mols_test)
-    
+
     # Actualizar los conjuntos
-    train_X = pd.merge(fingerprints_train, X, on='Molecule ChEMBL ID').drop(["Molecule ChEMBL ID", "standardized_molecule"], axis=1)
+    train_X = pd.merge(fingerprints_train, X, on='Molecule ChEMBL ID').drop(["Molecule ChEMBL ID", "standardized_molecule"], axis=1) 
     test_X = pd.merge(fingerprints_test, X, on='Molecule ChEMBL ID').drop(["Molecule ChEMBL ID", "standardized_molecule"], axis=1) 
-    
+
     return train_X, test_X
 
 ### Función que genera una red neuronal artificial con los parámetros establecidos ###
@@ -159,26 +159,26 @@ def formatResults(metrics_df, name):
 ### Función que realiza el entrenamiento de los modelos QSAR para un conjunto de entrenamiento concreto ###
 def QSARtraining(train_max_X, train_max_Y, train_mean_X, train_mean_Y, kf, params_rf, params_svm, params_nb, params_xgb, params_ann, name):
     ### Random Forest
-    rf_metrs_max, rf_model_max = trainModel(ensemble.RandomForestClassifier(), params_rf, kf, train_max_X, train_max_Y)
-    rf_metrs_mean, rf_model_mean = trainModel(ensemble.RandomForestClassifier(), params_rf, kf, train_mean_X, train_mean_Y)
+    rf_metrs_max, rf_model_max = trainModel(ensemble.RandomForestClassifier(), params_rf, kf, train_max_X, train_max_Y, "rf_max"+name)
+    rf_metrs_mean, rf_model_mean = trainModel(ensemble.RandomForestClassifier(), params_rf, kf, train_mean_X, train_mean_Y, "rf_mean"+name)
     
     ### Support Vector Machines
-    svm_metrs_max, svm_model_max = trainModel(SVC(), params_svm, kf, train_max_X, train_max_Y)
-    svm_metrs_mean, svm_model_mean = trainModel(SVC(), params_svm, kf, train_mean_X, train_mean_Y)
+    svm_metrs_max, svm_model_max = trainModel(SVC(), params_svm, kf, train_max_X, train_max_Y, "svm_max"+name)
+    svm_metrs_mean, svm_model_mean = trainModel(SVC(), params_svm, kf, train_mean_X, train_mean_Y, "svm_mean"+name)
     
     ### Naive Bayes
-    nb_metrs_max, nb_model_max = trainModel(BernoulliNB(), params_nb, kf, train_max_X, train_max_Y)
-    nb_metrs_mean, nb_model_mean = trainModel(BernoulliNB(), params_nb, kf, train_mean_X, train_mean_Y)
+    nb_metrs_max, nb_model_max = trainModel(BernoulliNB(), params_nb, kf, train_max_X, train_max_Y, "nb_max"+name)
+    nb_metrs_mean, nb_model_mean = trainModel(BernoulliNB(), params_nb, kf, train_mean_X, train_mean_Y, "nb_mean"+name)
     
     ### XGradientBoostTree
     xgb_metrs_max, xgb_model_max = trainModel(XGBClassifier(use_label_encoder=False, eval_metric='logloss'), params_xgb, 
-                                                      kf, train_max_X, train_max_Y)
+                                                      kf, train_max_X, train_max_Y, "xgb_max"+name)
     xgb_metrs_mean, xgb_model_mean = trainModel(XGBClassifier(use_label_encoder=False, eval_metric='logloss'), params_xgb, 
-                                                        kf, train_mean_X, train_mean_Y)
+                                                        kf, train_mean_X, train_mean_Y, "xgb_mean"+name)
     
     ### Artificial Neural Network
-    ann_metrs_max, ann_model_max = trainModel(KerasClassifier(build_fn=buildANN, verbose=0), params_ann, kf, train_max_X, train_max_Y)
-    ann_metrs_mean, ann_model_mean = trainModel(KerasClassifier(build_fn=buildANN, verbose=0), params_ann, kf, train_mean_X, train_mean_Y)
+    ann_metrs_max, ann_model_max = trainModel(KerasClassifier(build_fn=buildANN, verbose=0), params_ann, kf, train_max_X, train_max_Y, "ann_max"+name)
+    ann_metrs_mean, ann_model_mean = trainModel(KerasClassifier(build_fn=buildANN, verbose=0), params_ann, kf, train_mean_X, train_mean_Y, "ann_mean"+name)
     
     # Exportar los modelos QSAR
     pickle.dump(rf_model_max, open('rf_model_max'+name+'.sav', 'wb'))
@@ -202,3 +202,55 @@ def saveTestData(test_max_X, test_max_Y, test_mean_X, test_mean_Y, name):
     test_max_Y.to_csv('test_max_Y'+name+'.csv', index=False)
     test_mean_X.to_csv('test_mean_X'+name+'.csv', index=False)
     test_mean_Y.to_csv('test_mean_Y'+name+'.csv', index=False)
+    
+### Función que carga los modelos QSAR desde fichero ###
+def loadModels(name):
+    rf = pickle.load(open('rf_model'+name+'.sav', 'rb'))
+    svm = pickle.load(open('svm_model'+name+'.sav', 'rb'))
+    nb = pickle.load(open('nb_model'+name+'.sav', 'rb'))
+    xgb = pickle.load(open('xgb_model'+name+'.sav', 'rb'))
+    ann = keras.models.load_model('ann_model'+name+'.h5')
+    return rf, svm, nb, xgb, ann
+
+### Función que importa los conjuntos de test ###
+def loadTestData(name):
+    test_max_X = pd.read_csv('test_max_X'+name+'.csv')
+    test_max_Y = pd.read_csv('test_max_Y'+name+'.csv')
+    test_mean_X = pd.read_csv('test_mean_X'+name+'.csv')
+    test_mean_Y = pd.read_csv('test_mean_Y'+name+'.csv')
+    return test_max_X, test_max_Y, test_mean_X, test_mean_Y
+
+### Función que realiza la evaluación de los modelos QSAR para un conjunto de test concreto ###
+def QSARtesting(model_max_list, model_mean_list, test_max_X, test_max_Y, test_mean_X, test_mean_Y, name):
+    # Definir un dataframe que almacenar los resultados
+    results_test = pd.DataFrame()
+
+    # Evaluar cada modelo (excepto ANN) en su conjunto de test
+    for i in range(len(model_max_list)-1):
+        ## Predecir sobre los conjuntos de test con el modelo adecuado
+        pred_max = model_max_list[i].predict(test_max_X)
+        pred_mean = model_mean_list[i].predict(test_mean_X)
+    
+        ## Obtener las métricas de calidad de las predicciones
+        qm_max = getQualityMetrics(test_max_Y, pred_max)
+        qm_mean = getQualityMetrics(test_mean_Y, pred_mean)
+    
+        ## Añadir los resultados al dataframe auxiliar
+        results_test = results_test.append(qm_max, ignore_index=True)
+        results_test = results_test.append(qm_mean, ignore_index=True)
+        
+    ## Evaluar de forma diferente ANN (produce valores contínuos)
+    ### Predecir sobre los conjuntos de test
+    pred_max = np.around(model_max_list[4].predict(test_max_X)).astype(int)
+    pred_mean = np.around(model_mean_list[4].predict(test_mean_X)).astype(int)
+    
+    ### Obtener las métricas de calidad de las predicciones
+    qm_max = getQualityMetrics(test_max_Y, pred_max)
+    qm_mean = getQualityMetrics(test_mean_Y, pred_mean)
+    
+    ### Añadir los resultados al dataframe auxiliar
+    results_test = results_test.append(qm_max, ignore_index=True)
+    results_test = results_test.append(qm_mean, ignore_index=True)
+    
+    ## Almacenar los resultados
+    formatResults(results_test, "test"+name)

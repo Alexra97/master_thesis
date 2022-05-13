@@ -76,7 +76,7 @@ def elbowPlot(df, n):
     neighbors = nearest_neighbors.fit(df)
     
     distances, _ = neighbors.kneighbors(df)
-    distances = np.sort(distances[:,14], axis=0)
+    distances = np.sort(distances[:,n-1], axis=0)
     
     # Obtener el Elbow point
     i = np.arange(len(distances))
