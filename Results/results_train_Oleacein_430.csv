@@ -1,0 +1,11 @@
+Algorithm,Version,Balanced Accuracy,Sensitivity,Specificity,True Positives Ratio,False Positives Ratio,F-measure,AUC
+Random Forest,Max,0.88,0.83,0.94,0.82,0.18,0.81,0.88
+Random Forest,Mean,0.92,0.89,0.95,0.85,0.15,0.86,0.92
+Support Vector Machines,Max,0.85,0.78,0.93,0.79,0.21,0.77,0.85
+Support Vector Machines,Mean,0.91,0.89,0.94,0.81,0.18,0.84,0.91
+Naive Bayes,Max,0.86,0.8,0.93,0.79,0.21,0.78,0.86
+Naive Bayes,Mean,0.9,0.85,0.95,0.83,0.17,0.83,0.9
+XGradientBoostTree,Max,0.85,0.76,0.94,0.82,0.18,0.77,0.85
+XGradientBoostTree,Mean,0.88,0.8,0.96,0.86,0.14,0.8,0.88
+Artificial Neural Network,Max,0.85,0.78,0.93,0.79,0.21,0.77,0.85
+Artificial Neural Network,Mean,0.9,0.85,0.95,0.83,0.17,0.83,0.9
