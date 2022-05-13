@@ -8,3 +8,5 @@ The following files show the final results of the study. They are divided in thr
 Data are labelled by:
  - **Case study**: Original (DNMT1), addition of DNMT3A and DNMT3B (DNMT3) and addition of Oleacin (Oleacin).
  - **Number of molecules (Confidence Level)**: 226 molecules for a confidence level of 9. 430 molecules for a confidence level of 8.
+
+Finally, there is a folder called "Best models" with the best QSAR model for each of the six case studies. So anyone can import and use them.
