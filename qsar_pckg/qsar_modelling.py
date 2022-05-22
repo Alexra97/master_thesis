@@ -122,7 +122,7 @@ def trainModel(model, params, kfold, trainX, trainY, model_name):
     grid = GridSearchCV(estimator=model, param_grid=params, cv=kfold, scoring=scoring, refit="balanced_accuracy")
     grid.fit(trainX, trainY)
     
-    # Realizar la predicción con el mejor modelo
+    # Obtener el mejor modelo
     best_model = grid.best_estimator_
     
     # Obtener las métricas de calidad para el entrenamiento
