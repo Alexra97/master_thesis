@@ -1,0 +1,376 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+header .contenedor {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6vh;
+}
+
+header ul {
+  display: flex;
+}
+
+header ul li {
+  list-style: none;
+  margin-right: 15px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.contenedor {
+  flex-direction: column;
+  max-width: 95%;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 120px;
+}
+
+.contenedor-titulo {
+  text-align: center;
+  margin-top: 32vh;
+  margin-bottom: 53vh;
+}
+
+header {
+  background: linear-gradient(rgba(0,0,0,.0),
+              rgba(72,201,176,.3)),
+              url(imagenes/fondo.jpg);
+  height: 100vh;
+  background-size: cover;
+}
+
+h1 {
+  font-size: 60px;
+  color: #fff;
+  margin: 0;
+}
+
+h2 {
+  font-size: 25px;
+  color: #fff;
+}
+
+.contenedor-titulo {
+  text-align: center;
+}
+
+.lista {
+  flex-direction: row; 
+  font-size: 19px;
+  line-height: 31px;
+}
+
+.contenedor-menu {
+  max-width: 95%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+p.logo {
+  color: #fff;
+  font-size: 20px;
+  line-height: 31px;
+  margin-left: 17px;
+}
+
+nav ul li a {
+  color: #fff;
+}
+
+/* ABOUT ME */
+h3 {
+  text-align: center;
+  font-size: 55px;
+  font-weight: normal;
+}
+
+#about-me .contenedor-aboutme {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 17px;
+}
+
+#about-me .texto {
+  width: 44%;
+  margin-top: 7vh;
+}
+
+.perfil {
+  height: 550px;
+  border-radius: 50%;
+}
+
+/* INSTITUTIONS */
+.contenedor-institutions, .contenedor-institutions2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#institutions .item {
+  text-align: center;
+  flex-direction: column;
+  width: 25%;
+}
+
+.ins-img {
+  height: 120px;
+  border-radius: 50%;
+}
+
+#institutions ul li {
+  list-style: none;
+}
+
+#institutions ul li:nth-child(2) {
+  font-weight: bold;
+  font-size: 21px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+#institutions ul li:nth-child(3), li:nth-child(4), li:nth-child(5) {
+  line-height: 31px;
+  font-size: 19px;
+}
+
+ul {
+ flex-direction: column; 
+}
+
+/* SKILLS */
+
+#skills {
+  background: #F9FAFC;
+}
+
+.contenedor-skills {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.contenedor-pie {
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel {
+  width: 26%;
+}
+
+.lista-skills, .lista-lang {
+  list-style: none;
+  line-height: 31px;
+  font-size: 19px;
+  text-align: center;
+}
+
+.lista-skills li:nth-child(1) {
+  font-size: 23px;
+}
+
+.lista-lang li:nth-child(1) {
+  font-size: 23px;
+}
+
+.lista-lang li:nth-child(2) {
+  font-weight: bold;
+}
+
+ul {
+ flex-direction: column; 
+ padding-inline-start: 0px;
+}
+
+h4 {
+  font-size: 20px;
+  margin: 10px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.owl-skills .owl-stage-outer {
+  height: 370px;
+}
+
+/* MY PROJECTS */
+
+#my-projects {
+  background: #F9FAFC;
+}
+
+button.owl-prev, button.owl-next {
+  font-size: 40px !important;
+}
+
+span {
+    color: #7F8C8D;
+}
+
+/* CONTACT */
+#contact {
+  background: linear-gradient(rgba(75,130,120, .9),
+              rgba(70,70,70, .9));
+  text-align: center;
+  padding: 5px 0;
+  margin-top: 40px;
+}
+
+.contenedor-contact {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 95%;
+  margin-bottom: 6vh;
+}
+
+.links {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.info {
+  color: #fff;
+  font-style: none;
+  display: flex;
+  font-size: 17px;
+  align-items: center;
+  width: 418px;
+  justify-content: center;
+}
+
+.contenedor-contact h3 {
+  color: #fff;
+}
+
+.menu-icon {
+  display: none;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 950px) {
+  nav {
+    position: absolute;
+    top: 70px;
+    left: 0px;
+    background: #45B39D;
+    width: 100%;
+    display: none;
+  }
+  
+  nav .lista {
+    flex-direction: column;
+    display: flex;
+    margin-left: 20px;
+  }
+  
+  .menu-icon {
+    display: block;
+    height: 33px;
+    margin-top: 19px;
+    margin-right: 3%;
+  }
+  
+  .contenedor {
+    margin-bottom: 100px;
+    margin-top: 60px;
+  }
+  
+  h1 {
+    font-size: 34px;
+  }
+  
+  h2 {
+    font-size: 15px;
+  }
+  
+  .perfil {
+    height: 40vh; 
+  }
+  
+  .contenedor-aboutme {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  #about-me .texto {
+    width: 95%; 
+    margin-top: 3vh;
+    margin-left: 3%;
+  }
+  
+  .texto {
+    width: 90%;
+  }
+  
+  .contenedor-skills {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .carousel {
+    margin-bottom: 16%;
+    width: 75%;
+  }
+  
+  h3 {
+    font-size: 46px;
+  }
+  
+  .contenedor-institutions, .contenedor-institutions2 {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #institutions .item {
+    width: 90%;
+  }
+  
+  .ins-img {
+    height: 130px;
+    margin-bottom: 5%;
+  }
+  
+  .contenedor-publicaciones {
+    flex-direction: column;
+  }
+  
+  .publicacion {
+    width: 85%;
+    margin: auto;
+  }
+  
+  h4 {
+    font-size: 90%;
+  }
+  
+  .links {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 3%;
+  }
+}
+
+/* IPAD */
+@media (min-width: 600px) and (max-width:950px) {
+  .carousel {
+    width: 30%;
+  }
+}
+
+  
