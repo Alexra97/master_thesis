@@ -21,14 +21,15 @@ a {
 
 .contenedor-titulo {
   text-align: center;
-  margin-top: 38vh;
+  margin-top: 31vh;
   margin-bottom: 53vh;
   text-align: center;
+  color: #fff;
 }
 
 header {
-  background: linear-gradient(rgba(0,0,0,.8),
-              rgba(230,75,60,.8)),
+  background: linear-gradient(rgba(0,0,0,.4),
+              rgba(230,75,60,.5)),
               url(imagenes/fondo.jpg);
   height: 100vh;
   background-size: cover;
@@ -37,7 +38,6 @@ header {
 
 h1 {
   font-size: 60px;
-  color: #fff;
   margin: 0;
 }
 
@@ -47,11 +47,10 @@ h1 {
 
 h2 {
   font-size: 25px;
-  color: #fff;
 }
 
 h3 {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .contenedor-menu {
