@@ -82,6 +82,12 @@ nav ul li a {
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 950px) { 
+  .contenedor-titulo {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 28%;
+  }
+  
   h1 {
     font-size: 34px;
   }
@@ -104,9 +110,15 @@ nav ul li a {
 }
 
 /* IPAD */
-@media (min-width: 600px) and (max-width:950px) {
+@media (min-width: 600px) and (max-width:1300px) {
+  .contenedor-titulo {
+    margin-bottom: 65%; 
+  }
   .contenedor-build img {
     height: 35vh; 
+  }
+  h1 {
+    font-size: 31px; 
   }
 }
 
